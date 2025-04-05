@@ -4,6 +4,7 @@ import {
   signupController,
   logoutController,
   profileUpdateController,
+  checkAuth,
 } from "../controllers/authControllers.js";
 import { isUserLoggedIn } from "../middleware/authMiddleware.js";
 
@@ -14,5 +15,6 @@ authRouter.post("/signup", signupController);
 authRouter.post("/logout", logoutController);
 
 authRouter.put("/profile-update", isUserLoggedIn, profileUpdateController);
+authRouter.get("/check", isUserLoggedIn, checkAuth);
 
 export default authRouter;
