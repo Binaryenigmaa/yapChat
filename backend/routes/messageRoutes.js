@@ -1,10 +1,10 @@
 import express from "express";
-import { isUserLoggedIn } from "../middleware/authMiddleware";
+import { isUserLoggedIn } from "../middleware/authMiddleware.js";
 import {
   fetchMessages,
   getSidebarUsers,
   sendMessage,
-} from "../controllers/messageController";
+} from "../controllers/messageController.js";
 
 const messageRouter = express.Router();
 

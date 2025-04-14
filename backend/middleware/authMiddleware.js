@@ -12,7 +12,7 @@ export const isUserLoggedIn = async (req, res, next) => {
     if (!decodedToken)
       return res.status(400).json({ message: `Invalid Token` });
     const user = await User.findById(decodedToken.userId).select("-password");
-    res.user = user;
+    req.user = user;
     next();
   } catch (error) {
     console.log(`error in isUserLogin`, error);

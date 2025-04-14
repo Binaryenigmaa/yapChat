@@ -1,16 +1,44 @@
-import { MessageSquare, User, Lock, Mail } from "lucide-react";
+import { MessageSquare, User, Lock, Mail, Eye, EyeOff } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern.jsx";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore.js";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const SignupPage = () => {
+  const { signUp } = useAuthStore();
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // FUNCTIONS
   const handleSubmit = (formdata) => {
     const name = formdata.get("name");
     const email = formdata.get("email");
     const password = formdata.get("password");
-    console.log(name, email, password);
+    const userInput = { fullname: name, email, password };
+    try {
+      const formValidation = () => {
+        if (!name.trim()) return toast.error("Full Name is required!");
+        if (!email.trim()) return toast.error("Email is required!");
+        if (!/\S+@\S+/.test(email)) return toast.error("Invalid email format");
+        if (password.length < 6)
+          return toast.error("Password must be at least 6 characters!");
+        return true;
+      };
+      if (formValidation()) {
+        signUp(userInput);
+        setIsSigningUp(true);
+      }
+    } catch (error) {
+      toast.error("SignUp unsuccessful😞");
+    } finally {
+      setIsSigningUp(false);
+    }
   };
+
+  // MAIN UI
   return (
-    <div className="min-h-screen max-h-screen overflow-hidden grid lg:grid-cols-2">
+    <div className="min-h-screen max-h-screen grid lg:grid-cols-2">
       {/* left half */}
       <section className="flex justify-center items-center">
         <div className="w-[75%] sm:w-[90%] max-w-lg">
@@ -63,18 +91,39 @@ const SignupPage = () => {
                   <input
                     className="input input-bordered w-full pl-10 focus:ring-2 focus:ring-primary focus:outline-none"
                     placeholder="**********"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     required
                   />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-5 text-base-content/40" />
+                    ) : (
+                      <Eye className="size-5 text-base-content/40" />
+                    )}
+                  </button>
                 </div>
               </div>
-              <button className="rounded-b-sm  bg-yellow-600 px-10 py-2 mt-4 text-black font-semibold">
-                Create Account
+              <button
+                className="rounded-b-sm  bg-yellow-600 px-10 py-2 mt-4 text-black font-semibold cursor-pointer"
+                disabled={isSigningUp}
+              >
+                {isSigningUp ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin" />
+                    Signing Up...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </form>
             <div className="text-center">
-              <div className="text-base-content/60">
+              <div className="flex gap-1 text-base-content/60">
                 <p>Already have an account?</p>
                 <Link to="/login" className="link link-primary">
                   Login
@@ -85,7 +134,7 @@ const SignupPage = () => {
         </div>
       </section>
       {/* Right half */}
-      <section>
+      <section className="self-center">
         <AuthImagePattern
           title="Join our community"
           subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
