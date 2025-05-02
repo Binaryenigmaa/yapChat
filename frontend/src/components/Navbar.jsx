@@ -6,7 +6,7 @@ const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   return (
     <div className="fixed w-full top-0 z-40 flex justify-center">
-      <nav className="bg-base-100 border-b w-[95%] rounded border-base-300 backdrop-blur-lg flex justify-between px-8 h-12">
+      <nav className="bg-base-100 border-b w-[99%] rounded border-base-300 backdrop-blur-lg flex justify-between lg:px-8 px-3 h-12">
         {/* left side */}
         <div className="flex items-center gap-8">
           <Link
@@ -21,13 +21,19 @@ const Navbar = () => {
         </div>
         {/* right side */}
         <div className="flex items-center gap-2">
-          <Link to="/settings" className="btn btn-sm gap-2 transition-colors">
+          <Link
+            to="/settings"
+            className="btn btn-sm btn-primary gap-2 transition-colors"
+          >
             <Settings className="w-4 h-4" />
             <span className="hidden sm:inline">Settings</span>
           </Link>
           {authUser && (
             <>
-              <Link to={"/profile"} className={`btn btn-sm gap-2`}>
+              <Link
+                to={"/profile"}
+                className={`btn btn-sm btn-secondary gap-2`}
+              >
                 <User className="size-5" />
                 <span className="hidden sm:inline">Profile</span>
               </Link>

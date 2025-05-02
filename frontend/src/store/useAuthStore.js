@@ -1,17 +1,22 @@
 import { create } from "zustand";
 import { axiosInstance } from "../utils/axiosInstance.js";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
-export const useAuthStore = create((set) => ({
+const BASE_URL = "http://localhost:5000";
+
+export const useAuthStore = create((set, get) => ({
   authUser: null,
   isCheckingAuth: false,
   isUpdatingProfile: false,
   onlineUsers: [],
+  socket: null,
   login: async (userInfo) => {
     try {
       const response = await axiosInstance.post("/auth/login", userInfo);
       set({ authUser: response.data });
       toast.success(response.data.message);
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -21,6 +26,7 @@ export const useAuthStore = create((set) => ({
       const response = await axiosInstance.post("/auth/signup", userInfo);
       set({ authUser: response.data });
       toast.success(response.data.message);
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
       console.log(error.response.data.message);
@@ -32,9 +38,13 @@ export const useAuthStore = create((set) => ({
       const response = await axiosInstance.get("/auth/check");
       set({ authUser: response.data });
       toast.success("Welcome Back!😃");
+      get().connectSocket();
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      console.log(`Error in checkAuth frontend`, error);
+      toast.success("Welcome to yapChat, please login to start chatting");
+      console.log(
+        `Error in checkAuth frontend`,
+        error?.respones?.data?.message
+      );
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -45,6 +55,7 @@ export const useAuthStore = create((set) => ({
       const response = await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success(response.data.message);
+      get().disconnectSocket();
     } catch (error) {
       console.log(error);
       toast.error(response.data.message);
@@ -66,4 +77,11 @@ export const useAuthStore = create((set) => ({
       set({ isUpdatingProfile: false });
     }
   },
+  connectSocket: () => {
+    /*     const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+    const socket = io(BASE_URL);
+    socket.connect(); */
+  },
+  disconnectSocket: () => {},
 }));

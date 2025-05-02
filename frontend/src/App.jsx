@@ -9,10 +9,12 @@ import SettingsPage from "./pages/SettingsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { useEffect } from "react";
+import { useThemeStore } from "./store/useThemes.js";
 
 const App = () => {
   console.log(`App rerendered`);
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { currentTheme } = useThemeStore();
 
   useEffect(() => {
     checkAuth();
@@ -28,7 +30,7 @@ const App = () => {
     );
 
   return (
-    <div className="min-w-screen">
+    <div data-theme={currentTheme}>
       <Navbar />
       <Routes>
         <Route

@@ -23,7 +23,7 @@ export const fetchMessages = async (req, res) => {
     const messages = await Message.find({
       $or: [
         { senderId: chatterId, receiverId: chatteeId },
-        { receiverId: chatteeId, senderId: chatterId },
+        { senderId: chatteeId, receiverId: chatterId },
       ],
     });
     res.status(200).json(messages);
@@ -40,7 +40,7 @@ export const sendMessage = async (req, res) => {
     const senderId = req.user._id;
     let imgUrl;
 
-    if (imgUrl) {
+    if (image) {
       const cloudinaryResponse = await cloudinary.uploader.upload(image);
       imgUrl = cloudinaryResponse.secure_url;
     }
@@ -48,7 +48,7 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       senderId,
       receiverId,
-      text,
+      message: text,
       image: imgUrl,
     });
 
