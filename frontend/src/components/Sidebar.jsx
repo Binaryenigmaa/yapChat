@@ -28,7 +28,7 @@ const Sidebar = () => {
     <aside
       className={`fixed w-full h-full border-r-2 lg:h-[calc(100vh-4rem)] md:h-[calc(100vh-4rem)] lg:w-80 md:w-60 bg-base-100 lg:rounded-r-lg border-base-300 transform ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } lg:translate-x-0 transition-transform duration-300 ease-in-out z-20`}
+      } lg:translate-x-0 md:translate-x-0 transition-transform duration-300 ease-in-out z-20`}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4">

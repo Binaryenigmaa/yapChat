@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../utils/axiosInstance.js";
 import toast from "react-hot-toast";
+import { useChatStore } from "./useChatStore.js";
 import { io } from "socket.io-client";
 
 const BASE_URL = "http://localhost:5000";
@@ -16,7 +17,10 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.post("/auth/login", userInfo);
       set({ authUser: response.data });
       toast.success(response.data.message);
-      get().connectSocket();
+      useChatStore.getState().resetChatStore();
+      console.log(useChatStore.getState().messages);
+      useChatStore.getState().logChatStore();
+      // get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -26,7 +30,7 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.post("/auth/signup", userInfo);
       set({ authUser: response.data });
       toast.success(response.data.message);
-      get().connectSocket();
+      // get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
       console.log(error.response.data.message);
@@ -38,7 +42,7 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.get("/auth/check");
       set({ authUser: response.data });
       toast.success("Welcome Back!😃");
-      get().connectSocket();
+      // get().connectSocket();
     } catch (error) {
       toast.success("Welcome to yapChat, please login to start chatting");
       console.log(
@@ -55,10 +59,12 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success(response.data.message);
-      get().disconnectSocket();
+      useChatStore.getState().resetChatStore();
+      console.log(useChatStore.getState().messages);
+      // get().disconnectSocket();
     } catch (error) {
-      console.log(error);
-      toast.error(response.data.message);
+      console.log(error?.response?.data.message);
+      toast.error(error?.response?.data.message);
     }
   },
   updateProfile: async (profilepic) => {

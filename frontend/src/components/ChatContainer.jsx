@@ -80,7 +80,7 @@ const ChatContainer = () => {
               alt={selectedUser.fullname}
               className="rounded-full"
             />
-            <span className="font-semibold text-2xl">
+            <span className="font-semibold lg:text-2xl lg:whitespace-nowrap">
               {selectedUser.fullname}
             </span>
           </div>
@@ -90,34 +90,40 @@ const ChatContainer = () => {
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4">
         {selectedUser && messages.length > 0
-          ? messages.map((message) => (
-              <div
-                key={message._id}
-                className={`chat ${
-                  message.senderId === authUser._id ? "chat-start" : "chat-end"
-                } mb-4`}
-              >
+          ? messages.map((message) => {
+              console.log(message);
+              console.log(authUser);
+              return (
                 <div
-                  className={`max-w-xs p-3 rounded-lg ${
+                  key={message._id}
+                  className={`chat ${
                     message.senderId === authUser._id
-                      ? "bg-base-200 text-base-content"
-                      : "bg-accent-content text-white"
-                  }`}
+                      ? "chat-start"
+                      : "chat-end"
+                  } mb-4`}
                 >
-                  {message.image && (
-                    <img
-                      src={message.image}
-                      alt="Image"
-                      className="sm:max-w-[200px] h-32 object-cover rounded-md mb-2"
-                    />
-                  )}
-                  <p>{message.message}</p>
-                  <span className="text-xs text-gray-500 ">
-                    {formatTime(message.createdAt)}
-                  </span>
+                  <div
+                    className={`max-w-xs p-3 rounded-lg ${
+                      message.senderId === authUser._id
+                        ? "bg-base-200 text-base-content"
+                        : "bg-accent-content text-white"
+                    }`}
+                  >
+                    {message.image && (
+                      <img
+                        src={message.image}
+                        alt="Image"
+                        className="sm:max-w-[200px] h-32 object-cover rounded-md mb-2"
+                      />
+                    )}
+                    <p>{message.message}</p>
+                    <span className="text-xs text-gray-500 ">
+                      {formatTime(message.createdAt)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           : null}
       </div>
 
@@ -144,7 +150,11 @@ const ChatContainer = () => {
         )}
         {selectedUser ? (
           <form
-            action={handleSendMessage}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              handleSendMessage(formData);
+            }}
             className="flex items-center p-3 border-t bg-base-200 border-base-300"
           >
             <input

@@ -58,4 +58,12 @@ export const useChatStore = create((set, get) => ({
   setSelectedUser: (user) => {
     set({ selectedUser: user });
   },
+  resetChatStore: () => {
+    set({ selectedUser: null, messages: [], users: [] });
+  },
+  // this function is for debugging only
+  logChatStore: () => {
+    const { selectedUser, messages, users } = get();
+    console.log(selectedUser, messages, users);
+  },
 }));

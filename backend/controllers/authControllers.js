@@ -63,6 +63,7 @@ export const loginController = async (req, res) => {
       return res.status(400).json({ message: `Wrong password` });
     getJwtToken(user._id, res);
     return res.status(200).json({
+      _id: user._id,
       fullname: user.fullname,
       email: user.email,
       message: `Login Successful`,
