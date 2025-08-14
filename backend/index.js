@@ -23,7 +23,7 @@ app.use(
 );
 
 // ROUTING
-/* app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
   res.status(200).json({ message: `Server running at port: ${PORT} ` });
 });
  */
