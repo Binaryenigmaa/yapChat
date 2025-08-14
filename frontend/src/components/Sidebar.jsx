@@ -42,7 +42,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`fixed w-full h-full border-r-2 lg:h-[calc(100vh-4rem)] md:h-[calc(100vh-4rem)] lg:w-80 md:w-60 bg-base-100 lg:rounded-r-lg border-base-300 overflow-auto transform ${
+      className={`fixed w-full h-screen border-r-2 lg:h-[calc(100vh-4rem)] md:h-[calc(100vh-4rem)] lg:w-80 md:w-60 bg-base-100 lg:rounded-r-lg border-base-300 overflow-hidden flex flex-col transform ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0 md:translate-x-0 transition-transform duration-300 ease-in-out z-20`}
     >
@@ -57,6 +57,7 @@ const Sidebar = () => {
           onClick={toggleSidebar}
         />
       </div>
+
       {/* Search Bar */}
       <div className="p-3">
         <div className="flex items-center bg-base-200 rounded-lg p-2">
@@ -69,8 +70,9 @@ const Sidebar = () => {
           />
         </div>
       </div>
-      {/* Users list */}
-      <div className="overflow-y-auto">
+
+      {/* Users List */}
+      <div className="overflow-y-auto flex-1">
         {(filteredUsers.length > 0 ? filteredUsers : users).map((user) => (
           <div
             key={user._id}
