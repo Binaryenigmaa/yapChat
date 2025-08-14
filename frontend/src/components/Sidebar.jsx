@@ -72,7 +72,7 @@ const Sidebar = () => {
       </div>
 
       {/* Users List */}
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto flex-1 pb-20">
         {(filteredUsers.length > 0 ? filteredUsers : users).map((user) => (
           <div
             key={user._id}
