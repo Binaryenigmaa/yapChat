@@ -1,1 +1,1 @@
-This is a chat application written using MERN Stack with real time messaging functionality!
+This is a chat application using MERN Stack with real time messaging functionality!
