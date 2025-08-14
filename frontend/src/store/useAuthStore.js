@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useChatStore } from "./useChatStore.js";
 import { io } from "socket.io-client";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "/";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -20,7 +20,7 @@ export const useAuthStore = create((set, get) => ({
       useChatStore.getState().resetChatStore();
       console.log(useChatStore.getState().messages);
       useChatStore.getState().logChatStore();
-      // get().connectSocket();
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -30,7 +30,7 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.post("/auth/signup", userInfo);
       set({ authUser: response.data });
       toast.success(response.data.message);
-      // get().connectSocket();
+      get().connectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
       console.log(error.response.data.message);
@@ -42,7 +42,7 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.get("/auth/check");
       set({ authUser: response.data });
       toast.success("Welcome Back!😃");
-      // get().connectSocket();
+      get().connectSocket();
     } catch (error) {
       toast.success("Welcome to yapChat, please login to start chatting");
       console.log(
@@ -61,7 +61,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success(response.data.message);
       useChatStore.getState().resetChatStore();
       console.log(useChatStore.getState().messages);
-      // get().disconnectSocket();
+      get().disconnectSocket();
     } catch (error) {
       console.log(error?.response?.data.message);
       toast.error(error?.response?.data.message);
@@ -84,10 +84,21 @@ export const useAuthStore = create((set, get) => ({
     }
   },
   connectSocket: () => {
-    /*     const { authUser } = get();
+    const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
-    const socket = io(BASE_URL);
-    socket.connect(); */
+    const socket = io(BASE_URL, {
+      query: {
+        userId: authUser._id,
+      },
+    });
+    socket.connect();
+    set({ socket: socket });
+
+    socket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers: userIds });
+    });
   },
-  disconnectSocket: () => {},
+  disconnectSocket: () => {
+    if (get().socket?.connected) get().socket.disconnect();
+  },
 }));

@@ -6,7 +6,7 @@ const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   return (
     <div className="fixed w-full top-0 z-40 flex justify-center">
-      <nav className="bg-base-100 border-b w-[99%] rounded border-base-300 backdrop-blur-lg flex justify-between lg:px-8 px-3 h-12">
+      <nav className="bg-base-100 border-b  lg:w-[99%] w-full rounded border-base-300 backdrop-blur-lg flex justify-between lg:px-8 px-3 h-12">
         {/* left side */}
         <div className="flex items-center gap-8">
           <Link

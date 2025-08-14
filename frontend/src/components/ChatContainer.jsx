@@ -15,13 +15,31 @@ const ChatContainer = () => {
     toggleSidebar,
     sendMessage,
     isMessagesLoading,
+    subscribeToMessages,
+    unsubscribeFromMessages,
   } = useChatStore();
 
   const { authUser } = useAuthStore();
+  const endMessageRef = useRef(null);
+  const inputBoxRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
-  }, [getMessages, selectedUser._id]);
+    subscribeToMessages();
+
+    return () => unsubscribeFromMessages();
+  }, [
+    getMessages,
+    selectedUser._id,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
+
+  useEffect(() => {
+    if (endMessageRef.current && messages) {
+      endMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
@@ -30,11 +48,14 @@ const ChatContainer = () => {
   const handleSendMessage = async (formData) => {
     const message = formData.get("message");
     const payload = { text: message.trim(), image: imagePreview };
-    console.log(payload);
+    // console.log(payload);
     await sendMessage(payload);
     setText("");
     setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current || inputBoxRef.current) {
+      fileInputRef.current.value = "";
+      inputBoxRef.current.value = "";
+    }
   };
 
   const handleImageChange = (e) => {
@@ -96,17 +117,18 @@ const ChatContainer = () => {
               return (
                 <div
                   key={message._id}
+                  ref={endMessageRef}
                   className={`chat ${
                     message.senderId === authUser._id
-                      ? "chat-start"
-                      : "chat-end"
+                      ? "chat-end"
+                      : "chat-start"
                   } mb-4`}
                 >
                   <div
                     className={`max-w-xs p-3 rounded-lg ${
                       message.senderId === authUser._id
-                        ? "bg-base-200 text-base-content"
-                        : "bg-accent-content text-white"
+                        ? "bg-accent-content text-white"
+                        : "bg-base-200 text-base-content"
                     }`}
                   >
                     {message.image && (
@@ -160,6 +182,7 @@ const ChatContainer = () => {
             <input
               type="text"
               name="message"
+              ref={inputBoxRef}
               placeholder="Type a message"
               className="flex-1 rounded-lg p-2 outline-none text-sm "
             />
