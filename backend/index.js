@@ -23,10 +23,10 @@ app.use(
 );
 
 // ROUTING
-app.get("/", (req, res) => {
+/* app.get("/", (req, res) => {
   res.status(200).json({ message: `Server running at port: ${PORT} ` });
 });
-
+ */
 app.use("/api/auth", authRouter);
 app.use("/api/message", messageRouter);
 
